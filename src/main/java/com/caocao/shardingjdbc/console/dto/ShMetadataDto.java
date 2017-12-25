@@ -25,4 +25,16 @@ public class ShMetadataDto {
     private List<Integer> slaveIds;//从库ids
 
     private String loadBalanceAlgorithmType;//分片算法
+
+    private List<Integer> dataSourceNamesId;//分开分表使用的数据库id
+
+    private String dataSourceNames;
+
+
+    private String tableRuleConfigs;
+
+    private String bindingTableGroups;
+
+    private String props;
+
 }

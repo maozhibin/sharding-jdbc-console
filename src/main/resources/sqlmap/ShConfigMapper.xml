@@ -11,4 +11,71 @@
     <result column="create_by" jdbcType="VARCHAR" property="createBy" />
     <result column="update_by" jdbcType="VARCHAR" property="updateBy" />
   </resultMap>
+
+  <select id="totalCount" resultType="int">
+    SELECT
+    COUNT(1)
+    FROM
+    sh_config
+    WHERE 1=1
+    <if test=" keywords !=null and keywords != ''">
+      AND (
+      reg_namespace LIKE  concat('%',#{keywords}, '%')
+      OR
+      reg_id LIKE  concat('%',#{keywords}, '%')
+      OR
+      reg_server_list LIKE  concat('%',#{keywords}, '%')
+      )
+    </if>
+  </select>
+
+  <select id="queryConfigList" resultMap="BaseResultMap">
+    SELECT
+    *
+    FROM
+    sh_config
+    WHERE 1=1
+    <if test=" keywords !=null and keywords != ''">
+      AND (
+      reg_namespace LIKE  concat('%',#{keywords}, '%')
+      OR
+      reg_id LIKE  concat('%',#{keywords}, '%')
+      OR
+      reg_server_list LIKE  concat('%',#{keywords}, '%')
+      )
+    </if>
+    ORDER BY create_time DESC LIMIT #{begin},#{end}
+  </select>
+
+  <insert id="insertInfo" keyProperty="id" parameterType="com.caocao.shardingjdbc.console.dal.model.ShConfig"
+          useGeneratedKeys="true">
+    insert into sh_config (id, reg_namespace, reg_id,reg_server_list,data_source_name,status,create_by,update_by)
+    values (#{id,jdbcType=BIGINT}, #{regNamespace,jdbcType=VARCHAR}, #{regId,jdbcType=VARCHAR},
+    #{regServerList,jdbcType=VARCHAR},#{dataSourceName,jdbcType=VARCHAR},
+     #{status,jdbcType=TINYINT}, #{createBy,jdbcType=VARCHAR}, #{updateBy,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="updateInfo" parameterType="com.caocao.shardingjdbc.console.dal.model.ShConfig">
+    update sh_config
+      set
+    reg_namespace = #{regNamespace,jdbcType=VARCHAR},
+    reg_id = #{regId,jdbcType=VARCHAR},
+    reg_server_list = #{regServerList,jdbcType=VARCHAR},
+    data_source_name = #{dataSourceName,jdbcType=VARCHAR},
+    create_by = #{createBy,jdbcType=VARCHAR},
+    update_by = #{updateBy,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <select id="queryIdByRegNamespace" resultType="Integer">
+    SELECT
+      id
+    FROM
+    sh_config
+    WHERE  reg_namespace=#{name}
+  </select>
+
+  <delete id="deleteInfo">
+     delete from sh_config where id = #{id}
+  </delete>
 </mapper>

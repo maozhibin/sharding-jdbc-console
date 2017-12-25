@@ -26,4 +26,12 @@ public interface ShMetadataService {
     void updatePropertiesById(int id, String data);
 
     ShMetadata queryInfoById(int id);
+
+    List<ShMetadata> queryDataSourceCountNoSharding();
+
+    void installPropertiesSharding(ShMetadataDto shMetadataDto);
+
+    ShMetadataDto queryByName(String name);
+
+    List<ShMetadata> queryDataSourceCountNoMysql();
 }

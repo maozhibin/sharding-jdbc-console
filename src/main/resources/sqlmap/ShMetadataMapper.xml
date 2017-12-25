@@ -101,4 +101,28 @@
         sh_metadata
         WHERE data_source_name = #{dataSourceName}
     </select>
+
+    <select id="queryDataSourceCountNoSharding" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        sh_metadata
+        WHERE type != 3
+    </select>
+
+    <select id="queryByName" resultType="com.caocao.shardingjdbc.console.dto.ShMetadataDto">
+        SELECT
+          *
+         FROM
+        sh_metadata
+        WHERE data_source_name = #{dataSourceName}
+    </select>
+    <select id="queryDataSourceCountNoMysql" resultMap="BaseResultMap">
+        SELECT
+        *
+        FROM
+        sh_metadata
+        WHERE type != 1
+    </select>
+
 </mapper>

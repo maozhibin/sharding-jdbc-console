@@ -25,6 +25,13 @@ public interface ShMetadataMapper {
 
     Integer queryNameById(String dataSourceName);
 
+    List<ShMetadata> queryDataSourceCountNoSharding();
+
+    ShMetadataDto queryByName(String name);
+
+    List<ShMetadata> queryDataSourceCountNoMysql();
+
+
 //    int insert(ShMetadata record);
 //
 //    int insertSelective(ShMetadata record);
