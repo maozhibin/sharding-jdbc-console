@@ -20,7 +20,24 @@ public class Constants {
   public static final Byte MASTER_SLAVE_INTERGER = 2;
   public static final Byte SHARDING_INTERGER = 3;
 
+  public static final Byte IS_QUOTE = 1;
+  public static final Byte NO_QUATE = 0;
+
   public static final String ADD_INFO = "add";
   public static final String EDIT_INFO = "edit";
+
+
+  // Zookeeper
+  public static final String CONSOLE = "/console";
+  public static final String CONFIG = "/config";
+  public static final String DATASOURCE = "/datasource ";
+
+  public static final String SHARDINGS = "/sharding ";
+  public static final String PROPS = "/props ";
+
+  public static final String MASTERSLAVE = "/masterslave";
+  public static final  String RUL = "/rule";
+  public static final String CONFIGMAP = "/configmap ";
+
 
 }

@@ -5,12 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.caocao.shardingjdbc.console.common.Constants;
 import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
 import com.caocao.shardingjdbc.console.dal.ext.Page;
+import com.caocao.shardingjdbc.console.dal.model.ShConfig;
 import com.caocao.shardingjdbc.console.dal.model.ShMetadata;
+import com.caocao.shardingjdbc.console.dal.service.ShConfigService;
 import com.caocao.shardingjdbc.console.dal.service.ShMetadataService;
 import com.caocao.shardingjdbc.console.dto.ShMetadataDto;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -24,6 +27,8 @@ import java.util.Map;
 public class ShMetadataContoller {
     @Resource
     private ShMetadataService shMetadataService;
+    @Resource
+    private ShConfigService shConfigService;
     /**
      * 数据列表
      */
@@ -104,6 +109,11 @@ public class ShMetadataContoller {
         if(!NumberUtils.isNumber(id)){
             return  result.fill(JsonResponseMsg.CODE_FAIL,"参数错误");
         }
+        ShMetadata shMetadata = shMetadataService.queryInfoById(NumberUtils.toInt(id));
+        List<ShConfig> shConfigList = shConfigService.queryByDataSourceName(shMetadata.getDataSourceName());
+        if(!CollectionUtils.isEmpty(shConfigList)){
+            return  result.fill(JsonResponseMsg.CODE_FAIL,"对不起，你已经被注册中心引用不能进行删除");
+        }
         shMetadataService.deleteInfo(id);
         return result.fill(JsonResponseMsg.CODE_SUCCESS,"删除成功");
     }
@@ -121,10 +131,11 @@ public class ShMetadataContoller {
         }else if(Constants.SHARDING_INTERGER.equals(Byte.parseByte(type))){
             shMetadataService.installPropertiesSharding(shMetadataDto);
         }
+        String name = shMetadataDto.getDataSourceName();
         if(shMetadataDto.getId()!=null){
             shMetadataService.updateInfo(shMetadataDto);
+            shConfigService.updateStatusByDataSourceName(name, (byte) 2);
         }else{
-            String name = shMetadataDto.getDataSourceName();
             Integer id =shMetadataService.queryNameById(name);
             if(id != null){
                 return result.fill(JsonResponseMsg.CODE_FAIL,"你输入的数据库名字已经存在，请重新输入");
@@ -144,6 +155,7 @@ public class ShMetadataContoller {
             return  result.fill(JsonResponseMsg.CODE_FAIL,"参数错误");
         }
         shMetadataService.updateInfo(shMetadataDto);
+        shConfigService.updateStatusByDataSourceName(shMetadataDto.getDataSourceName(), (byte) 2);
         return result.fill(JsonResponseMsg.CODE_SUCCESS, "修改成功");
     }
     /**

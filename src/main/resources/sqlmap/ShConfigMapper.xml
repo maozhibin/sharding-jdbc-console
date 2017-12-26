@@ -29,12 +29,21 @@
     </if>
   </select>
 
-  <select id="queryConfigList" resultMap="BaseResultMap">
+  <select id="queryConfigList" resultType="com.caocao.shardingjdbc.console.dto.ShConfigDto">
     SELECT
-    *
+      id,
+      reg_namespace regNamespace,
+      reg_id regId,
+      reg_server_list regServerList,
+      data_source_name dataSourceName,
+      STATUS,
+      '' statusValue,
+      create_by createBy,
+      update_by updateBy
     FROM
     sh_config
-    WHERE 1=1
+    WHERE
+    1 = 1
     <if test=" keywords !=null and keywords != ''">
       AND (
       reg_namespace LIKE  concat('%',#{keywords}, '%')
@@ -78,4 +87,34 @@
   <delete id="deleteInfo">
      delete from sh_config where id = #{id}
   </delete>
+
+  <select id="queryDataSourceNameByid" resultType="String">
+    SELECT
+      data_source_name
+    FROM
+    sh_config
+    WHERE  id=#{id}
+  </select>
+
+  <update id="updateStatusById">
+    update sh_config
+      set
+    status = #{type,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+
+  <update id="updateStatusByDataSourceName">
+    update sh_config
+      set
+    status = #{type,jdbcType=TINYINT}
+    where data_source_name = #{name,jdbcType=VARCHAR}
+  </update>
+
+  <select id="queryByDataSourceName" resultMap="BaseResultMap">
+    SELECT
+      *
+    FROM
+    sh_config
+    WHERE data_source_name = #{dataSourceName,jdbcType=VARCHAR}
+  </select>
 </mapper>

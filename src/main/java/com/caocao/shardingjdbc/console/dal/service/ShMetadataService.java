@@ -23,8 +23,6 @@ public interface ShMetadataService {
 
     Integer queryNameById(String dataSourceName);
 
-    void updatePropertiesById(int id, String data);
-
     ShMetadata queryInfoById(int id);
 
     List<ShMetadata> queryDataSourceCountNoSharding();
@@ -34,4 +32,5 @@ public interface ShMetadataService {
     ShMetadataDto queryByName(String name);
 
     List<ShMetadata> queryDataSourceCountNoMysql();
+
 }

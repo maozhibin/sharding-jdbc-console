@@ -1,14 +1,23 @@
 package com.caocao.shardingjdbc.console.controller;
 
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.caocao.shardingjdbc.console.common.Constants;
+import com.caocao.shardingjdbc.console.common.CuratorService;
 import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
 import com.caocao.shardingjdbc.console.dal.ext.Page;
 import com.caocao.shardingjdbc.console.dal.model.ShConfig;
 import com.caocao.shardingjdbc.console.dal.service.ShConfigService;
+import com.caocao.shardingjdbc.console.dal.service.ShMetadataService;
+import com.caocao.shardingjdbc.console.dto.ShConfigDto;
+import com.caocao.shardingjdbc.console.dto.ShMetadataDto;
 import org.apache.commons.lang.math.NumberUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,9 +25,13 @@ import java.util.Map;
 @Controller
 @RequestMapping("sj-api/config")
 public class ShConfigController {
-    @Autowired
+    private static final Logger logger = LoggerFactory.getLogger(ShConfigController.class);
+    @Resource
     private ShConfigService shConfigService;
-
+    @Resource
+    private ShMetadataService shMetadataService;
+    @Resource
+    private CuratorService curatorService;
     /**
      * 列表查询
      * @param limit
@@ -31,7 +44,7 @@ public class ShConfigController {
     public JsonResponseMsg queryConfigList(@RequestParam(defaultValue = "10", required = false) Integer limit,
                                                @RequestParam(defaultValue = "1", required = false) Integer offset,String keywords){
         JsonResponseMsg result = new JsonResponseMsg();
-        Page<ShConfig> page = new Page<>(limit, offset);
+        Page<ShConfigDto> page = new Page<>(limit, offset);
         shConfigService.queryConfigList(page,keywords);
         Map<String,Object> map = new HashMap<>();
         map.put("page",page);
@@ -75,4 +88,82 @@ public class ShConfigController {
         shConfigService.deleteInfo(id);
         return result.fill(JsonResponseMsg.CODE_SUCCESS,"删除成功");
     }
+
+    /**
+     * 状态修改
+     */
+    @RequestMapping(value = "updateStatus",method = RequestMethod.POST)
+    @ResponseBody
+    public  JsonResponseMsg updateStatus(@RequestBody ShConfigDto shConfigDto, @RequestParam("type")String type){
+        JsonResponseMsg result = new JsonResponseMsg();
+        if(shConfigDto.getId()==null){
+            return result.fill(JsonResponseMsg.CODE_FAIL,"参数错误");
+        }
+        if(!NumberUtils.isNumber(type)){
+            return result.fill(JsonResponseMsg.CODE_FAIL,"参数错误");
+        }
+        //数据同步到zk中
+        if(Constants.IS_QUOTE.equals(NumberUtils.toByte(type))){
+            String dataSourceName = shConfigDto.getDataSourceName();
+            ShMetadataDto shMetadataDto = shMetadataService.queryByName(dataSourceName);
+            JSONObject properties = (JSONObject) JSONObject.parse(shMetadataDto.getProperties());
+            JSONArray arrays = properties.getJSONArray("dataSources");
+            String dataSourcePth =Constants.CONSOLE+"/"+shConfigDto.getRegNamespace()+Constants.CONFIG+Constants.DATASOURCE;
+            try {
+                if(!curatorService.isExists(dataSourcePth)){
+                    curatorService.create(dataSourcePth,JSONObject.toJSONString(arrays));
+                }else {
+                    curatorService.update(dataSourcePth,JSONObject.toJSONString(arrays));
+                }
+                Byte datatype = shMetadataDto.getType();
+                if(Constants.MASTER_SLAVE_INTERGER.equals(datatype)){
+                    Map<String,Object> map = new HashMap<>();
+                    String masterDataSourceName = properties.getString("masterDataSourceName");
+                    JSONArray slaveDataSourceNames = properties.getJSONArray("slaveDataSourceNames");
+                    String name = properties.getString("name");
+                    String loadBalanceAlgorithmType = properties.getString("loadBalanceAlgorithmType");
+                    map.put("masterDataSourceName",masterDataSourceName);
+                    map.put("slaveDataSourceNames",slaveDataSourceNames);
+                    map.put("name",name);
+                    map.put("loadBalanceAlgorithmType",loadBalanceAlgorithmType);
+                    String json = JSONObject.toJSONString(map);
+                    String masterslaveRulePath = Constants.CONSOLE+"/"+shConfigDto.getRegNamespace() +Constants.CONFIG+Constants.MASTERSLAVE+Constants.RUL;
+                    if(!curatorService.isExists(masterslaveRulePath)){
+                        curatorService.create(masterslaveRulePath,json);
+                    }else {
+                        curatorService.update(masterslaveRulePath,json);
+                    }
+                }else if(Constants.SHARDING_INTERGER.equals(datatype)){
+                    Map<String,Object> map = new HashMap<>();
+                    JSONArray bindingTableGroups = properties.getJSONArray("bindingTableGroups");
+                    JSONArray masterSlaveRuleConfigs = properties.getJSONArray("masterSlaveRuleConfigs");
+                    JSONArray tableRuleConfigs = properties.getJSONArray("tableRuleConfigs");
+                    map.put("bindingTableGroups",bindingTableGroups);
+                    map.put("masterSlaveRuleConfigs",masterSlaveRuleConfigs);
+                    map.put("tableRuleConfigs",tableRuleConfigs);
+                    String json = JSONObject.toJSONString(map);
+                    String shardingRulePath = Constants.CONSOLE+"/"+shConfigDto.getRegNamespace()+Constants.CONFIG+Constants.SHARDINGS+Constants.RUL;
+                    if(!curatorService.isExists(shardingRulePath)){
+                        curatorService.create(shardingRulePath,json);
+                    }else {
+                        curatorService.update(shardingRulePath,json);
+                    }
+                    String props = properties.getString("props");
+                    String shardingPropsPath = Constants.CONSOLE+"/"+shConfigDto.getRegNamespace()+Constants.CONFIG+Constants.SHARDINGS+Constants.PROPS;
+                    if(!curatorService.isExists(shardingPropsPath)){
+                        curatorService.create(shardingPropsPath,props);
+                    }else {
+                        curatorService.update(shardingPropsPath,props);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("数据同步zk出错",e);
+                e.printStackTrace();
+            }
+        }
+        shConfigService.updateStatusById(shConfigDto.getId(),NumberUtils.toByte(type));
+        return result.fill(JsonResponseMsg.CODE_SUCCESS,"状态修改成功");
+    }
+
+
 }

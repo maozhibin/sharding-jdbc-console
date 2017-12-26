@@ -31,6 +31,8 @@ public interface ShMetadataMapper {
 
     List<ShMetadata> queryDataSourceCountNoMysql();
 
+    String queryPropertiesByDataSourceName(String dataSourceName);
+
 
 //    int insert(ShMetadata record);
 //

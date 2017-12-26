@@ -10,6 +10,8 @@ public class ShMetadataDto {
 
     private Byte type;
 
+    private Byte quote;
+
     private String dataSourceName;
 
     private String createBy;

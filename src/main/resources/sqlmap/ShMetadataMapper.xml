@@ -125,4 +125,12 @@
         WHERE type != 1
     </select>
 
+
+    <select id="queryPropertiesByDataSourceName" resultType="String">
+        SELECT
+          properties
+         FROM
+        sh_metadata
+          where data_source_name = #{dataSourceName,jdbcType=VARCHAR}
+    </select>
 </mapper>

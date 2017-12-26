@@ -1,16 +1,18 @@
 package com.caocao.shardingjdbc.console.dal.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.caocao.shardingjdbc.console.common.Constants;
+import com.caocao.shardingjdbc.console.dal.dao.ShConfigMapper;
 import com.caocao.shardingjdbc.console.dal.dao.ShMetadataMapper;
 import com.caocao.shardingjdbc.console.dal.ext.Page;
+import com.caocao.shardingjdbc.console.dal.model.ShConfig;
 import com.caocao.shardingjdbc.console.dal.model.ShMetadata;
 import com.caocao.shardingjdbc.console.dal.service.ShMetadataService;
 import com.caocao.shardingjdbc.console.dto.ShMetadataDto;
 import org.apache.commons.lang.math.NumberUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -19,7 +21,8 @@ import java.util.*;
 public class ShMetadataServiceImpl implements ShMetadataService {
     @Resource
     private ShMetadataMapper shMetadataMapper;
-
+    @Resource
+    private ShConfigMapper shConfigMapper;
     @Override
     public void queryDataSourceList(Page<ShMetadataDto> page, String type,String keywords) {
         int total =0;
@@ -36,6 +39,13 @@ public class ShMetadataServiceImpl implements ShMetadataService {
             shMetadataDto.setUpdateBy(shMetadata.getUpdateBy());
             shMetadataDto.setType(shMetadata.getType());
             shMetadataDto.setProperties(shMetadata.getProperties());
+            List<ShConfig> shConfigList = shConfigMapper.queryByDataSourceName(shMetadata.getDataSourceName());
+            if(CollectionUtils.isEmpty(shConfigList)){
+                shMetadataDto.setQuote((byte) 0);
+            }else{
+                shMetadataDto.setQuote((byte) 1);
+            }
+
             if(Constants.MYSQL_INTERGER.equals(shMetadata.getType())){
                 shMetadataDto.setTypeValue(Constants.MYSQL);
             }else  if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadata.getType())){
@@ -121,6 +131,7 @@ public class ShMetadataServiceImpl implements ShMetadataService {
     @Override
     public void installPropertiesSharding(ShMetadataDto shMetadataDto) {
         Set<Object> dataSources = new HashSet<>();
+        List<Object> masterSlaveRuleConfigs = new ArrayList<>();
         Map<String,Object> map = new HashMap<>();
         map.put("name",shMetadataDto.getDataSourceName());
         map.put("tableRuleConfigs",JSONObject.parse(shMetadataDto.getTableRuleConfigs()));
@@ -137,19 +148,34 @@ public class ShMetadataServiceImpl implements ShMetadataService {
                 dataSourceNames += shMetadatas.getDataSourceName()+",";
             }
             //如果在properties中出现相同的数据库名信息，以master的为准
+            JSONObject object =null;
             if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())){
-                JSONObject object = (JSONObject) JSONObject.parse(shMetadatas.getProperties());
+                object = (JSONObject) JSONObject.parse(shMetadatas.getProperties());
                 JSONArray arrays  = object.getJSONArray("dataSources");
                 for(int j = 0;j<arrays.size();j++){
                     JSONObject object1 = (JSONObject)JSONObject.parse(String.valueOf(arrays.get(j)));
+                    if(!masterNameList.contains(object1.getString("name"))){//如果master引用的mysql数据源都相同只保存第一个
+                        dataSources.add(arrays.get(j));
+                    }
                     masterNameList.add(object1.getString("name"));
                 }
-                for (Object array:arrays) {
-                    dataSources.add(array);
-                }
+//                for (Object array:arrays) {
+//                    dataSources.add(array);
+//                }
+            }
+            if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())){
+                Map<String,Object> map1 = new HashMap<>();
+                String masterDataSourceName = object.getString("masterDataSourceName");
+                JSONArray slaveDataSourceNames = object.getJSONArray("slaveDataSourceNames");
+                String name = object.getString("name");
+                String loadBalanceAlgorithmType = object.getString("loadBalanceAlgorithmType");
+                map1.put("masterDataSourceName",masterDataSourceName);
+                map1.put("slaveDataSourceNames",slaveDataSourceNames);
+                map1.put("name",name);
+                map1.put("loadBalanceAlgorithmType",loadBalanceAlgorithmType);
+                masterSlaveRuleConfigs.add(map1);
             }
         }
-        System.out.println("dataSources1:"+dataSources);
         //上面有添加则此次添加跳过
         for(int i =0;i<DataSourceNamesIds.size();i++) {
             ShMetadata shMetadatas = shMetadataMapper.queryInfoById(DataSourceNamesIds.get(i));
@@ -161,9 +187,9 @@ public class ShMetadataServiceImpl implements ShMetadataService {
 
             }
         }
-        System.out.println("dataSources2:"+dataSources);
         map.put("dataSourceNames",dataSourceNames);
         map.put("dataSources",dataSources);
+        map.put("masterSlaveRuleConfigs",masterSlaveRuleConfigs);
         String json = JSONObject.toJSONString(map);
         shMetadataDto.setProperties(json);
     }
@@ -178,6 +204,7 @@ public class ShMetadataServiceImpl implements ShMetadataService {
         return shMetadataMapper.queryDataSourceCountNoMysql();
     }
 
+
     @Override
     public String queryMasterPropertiesById(int id) {
         return shMetadataMapper.queryMasterPropertiesById(id);
@@ -188,13 +215,6 @@ public class ShMetadataServiceImpl implements ShMetadataService {
         return shMetadataMapper.queryNameById(dataSourceName);
     }
 
-    @Override
-    public void updatePropertiesById(int id, String data) {
-        String properties = this.queryMasterPropertiesById(id);
-        JSONObject object = (JSONObject) JSONObject.parse(properties);
-        String dataSources  =  object.getString("dataSources");
-
-    }
 
     @Override
     public ShMetadata queryInfoById(int id) {
