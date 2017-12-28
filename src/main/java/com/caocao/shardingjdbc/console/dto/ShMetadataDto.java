@@ -32,7 +32,6 @@ public class ShMetadataDto {
 
     private String dataSourceNames;
 
-
     private String tableRuleConfigs;
 
     private String bindingTableGroups;

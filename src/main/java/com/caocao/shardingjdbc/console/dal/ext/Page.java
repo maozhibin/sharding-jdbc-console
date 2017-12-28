@@ -21,12 +21,12 @@ public class Page<T> {
     private int limit = 10;
 
     @JsonIgnore
-    private int offset =0;
+    private int offset = 0;
 
     public Page(int limit, int offset) {
-        if(offset > 1){
-            offset = (offset-1)*10;
-        }else if(offset==1){
+        if (offset > 1) {
+            offset = (offset - 1) * 10;
+        } else if (offset == 1) {
             offset = 0;
         }
         this.limit = limit;
@@ -69,13 +69,5 @@ public class Page<T> {
         return this;
     }
 
-//    public void pageDeal(Integer offset,Integer limit){
-//        if(offset > 1){
-//            offset = (offset-1)*10;
-//            limit = offset+10;
-//        }else if(offset==1){
-//            offset = 0;
-//        }
-//    }
 }
 

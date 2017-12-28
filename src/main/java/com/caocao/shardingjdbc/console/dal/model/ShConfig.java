@@ -1,5 +1,8 @@
 package com.caocao.shardingjdbc.console.dal.model;
 
+import lombok.Data;
+
+@Data
 public class ShConfig {
     private Long id;
 
@@ -16,70 +19,6 @@ public class ShConfig {
     private String createBy;
 
     private String updateBy;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getRegNamespace() {
-        return regNamespace;
-    }
-
-    public void setRegNamespace(String regNamespace) {
-        this.regNamespace = regNamespace;
-    }
-
-    public String getRegId() {
-        return regId;
-    }
-
-    public void setRegId(String regId) {
-        this.regId = regId;
-    }
-
-    public String getRegServerList() {
-        return regServerList;
-    }
-
-    public void setRegServerList(String regServerList) {
-        this.regServerList = regServerList;
-    }
-
-    public String getDataSourceName() {
-        return dataSourceName;
-    }
-
-    public void setDataSourceName(String dataSourceName) {
-        this.dataSourceName = dataSourceName;
-    }
-
-    public Byte getStatus() {
-        return status;
-    }
-
-    public void setStatus(Byte status) {
-        this.status = status;
-    }
-
-    public String getCreateBy() {
-        return createBy;
-    }
-
-    public void setCreateBy(String createBy) {
-        this.createBy = createBy;
-    }
-
-    public String getUpdateBy() {
-        return updateBy;
-    }
-
-    public void setUpdateBy(String updateBy) {
-        this.updateBy = updateBy;
-    }
 
     @Override
     public String toString() {

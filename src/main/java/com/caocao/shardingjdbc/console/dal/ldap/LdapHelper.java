@@ -1,6 +1,7 @@
 package com.caocao.shardingjdbc.console.dal.ldap;
 
 import com.sun.org.apache.xerces.internal.impl.dv.util.Base64;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -11,56 +12,53 @@ import javax.naming.directory.InitialDirContext;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Hashtable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
+@Slf4j
 @Component("ldapHelper")
 public class LdapHelper {
-    private  DirContext ctx;
+    private DirContext ctx;
     @Autowired
     private LdapConfig ldapConfig;
 
     @SuppressWarnings(value = "unchecked")
-    public  DirContext getCtx() {
+    public DirContext getCtx() {
         //设置连接LDAP的实现工厂
         Hashtable env = new Hashtable();
         env.put(Context.INITIAL_CONTEXT_FACTORY, "com.sun.jndi.ldap.LdapCtxFactory");
         // 指定LDAP服务器的主机名和端口号
-        env.put(Context.PROVIDER_URL, ldapConfig.getProviderUrl() +ldapConfig.getRoot());
+        env.put(Context.PROVIDER_URL, ldapConfig.getProviderUrl() + ldapConfig.getRoot());
         //给环境提供认证方法
         env.put(Context.SECURITY_AUTHENTICATION, "simple");
         //指定进入的目录识别名DN
-        env.put(Context.SECURITY_PRINCIPAL, "cn="+ldapConfig.getAccount() );
+        env.put(Context.SECURITY_PRINCIPAL, "cn=" + ldapConfig.getAccount());
         //进入的目录密码
         env.put(Context.SECURITY_CREDENTIALS, ldapConfig.getPassword().trim());
-        System.out.println(ldapConfig.getProviderUrl() + ldapConfig.getRoot());
-        System.out.println(ldapConfig.getAccount());
-        System.out.println(ldapConfig.getPassword());
+        log.info(ldapConfig.getProviderUrl() + ldapConfig.getRoot());
+        log.info(ldapConfig.getAccount());
+        log.info(ldapConfig.getPassword());
 
         try {
             // 链接ldap  // 得到初始目录环境的一个引用
             ctx = new InitialDirContext(env);
-            System.out.println("认证成功");
+            log.info("认证成功");
         } catch (javax.naming.AuthenticationException e) {
-            e.printStackTrace();
-            System.out.println("认证失败");
+            log.error("认证失败", e);
         } catch (Exception e) {
-            System.out.println("认证出错：");
-            e.printStackTrace();
+            log.error("认证出错：", e);
         }
         return ctx;
     }
 
-    public  void closeCtx(){
+    public void closeCtx() {
         try {
             ctx.close();
         } catch (NamingException ex) {
-            Logger.getLogger(LdapHelper.class.getName()).log(Level.SEVERE, null, ex);
+            log.error("error close ctx", ex);
         }
     }
 
     @SuppressWarnings(value = "unchecked")
-    public  boolean verifySHA(String ldappw, String inputpw)
+    public boolean verifySHA(String ldappw, String inputpw)
             throws NoSuchAlgorithmException {
 
         // MessageDigest 提供了消息摘要算法，如 MD5 或 SHA，的功能，这里LDAP使用的是SHA-1

@@ -7,10 +7,10 @@ import org.apache.ibatis.annotations.Param;
 import java.util.List;
 
 public interface ShConfigMapper {
-    int totalCount(@Param("keywords")String keywords);
+    int totalCount(@Param("keywords") String keywords);
 
-
-    List<ShConfigDto> queryConfigList(@Param("begin") Integer begin, @Param("end") Integer end, @Param("keywords")String keywords);
+    List<ShConfigDto> queryConfigList(@Param("begin") Integer begin, @Param("end") Integer end,
+                                      @Param("keywords") String keywords);
 
     void updateInfo(ShConfig shConfig);
 
@@ -24,18 +24,8 @@ public interface ShConfigMapper {
 
     void updateStatusById(@Param("id") Long id, @Param("type") byte type);
 
-    void updateStatusByDataSourceName(@Param("name") String name,@Param("type")Byte type);
+    void updateStatusByDataSourceName(@Param("name") String name, @Param("type") Byte type);
 
     List<ShConfig> queryByDataSourceName(String dataSourceName);
 
-
-//    int insert(ShConfig record);
-//
-//    int insertSelective(ShConfig record);
-//
-//    ShConfig selectByPrimaryKey(Long id);
-//
-//    int updateByPrimaryKeySelective(ShConfig record);
-//
-//    int updateByPrimaryKey(ShConfig record);
 }

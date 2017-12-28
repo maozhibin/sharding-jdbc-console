@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class ShConfigServiceImpl implements ShConfigService{
+public class ShConfigServiceImpl implements ShConfigService {
     @Autowired
     private ShConfigMapper shConfigMapper;
 
@@ -20,7 +20,7 @@ public class ShConfigServiceImpl implements ShConfigService{
     public void queryConfigList(Page<ShConfigDto> page, String keywords) {
         int total = shConfigMapper.totalCount(keywords);
         page.setTotal(total);
-        page.setRows(shConfigMapper.queryConfigList(page.getOffset(),page.getLimit(),keywords));
+        page.setRows(shConfigMapper.queryConfigList(page.getOffset(), page.getLimit(), keywords));
     }
 
     @Override
@@ -50,16 +50,16 @@ public class ShConfigServiceImpl implements ShConfigService{
 
     @Override
     public void updateStatusById(Long id, byte type) {
-        shConfigMapper.updateStatusById(id,type);
+        shConfigMapper.updateStatusById(id, type);
     }
 
     @Override
     public void updateStatusByDataSourceName(String name, Byte type) {
-        shConfigMapper.updateStatusByDataSourceName(name,type);
+        shConfigMapper.updateStatusByDataSourceName(name, type);
     }
 
     @Override
     public List<ShConfig> queryByDataSourceName(String dataSourceName) {
-       return shConfigMapper.queryByDataSourceName(dataSourceName);
+        return shConfigMapper.queryByDataSourceName(dataSourceName);
     }
 }

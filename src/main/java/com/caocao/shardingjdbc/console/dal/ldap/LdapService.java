@@ -23,7 +23,7 @@ public class LdapService {
     @Autowired
     private LdapHelper ldapHelper;
 
-    public  boolean addUser(String usr, String pwd) {
+    public boolean addUser(String usr, String pwd) {
         DirContext ctx = null;
         try {
             ctx = ldapHelper.getCtx();
@@ -52,7 +52,7 @@ public class LdapService {
         return false;
     }
 
-    public  boolean authenticate(String usr, String pwd) {
+    public boolean authenticate(String usr, String pwd) {
         boolean success = false;
         DirContext ctx = null;
         try {
@@ -61,14 +61,14 @@ public class LdapService {
             constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
             // constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
             NamingEnumeration en = ctx.search("", "cn=" + usr, constraints); // 查询所有用户
-            logger.info("en is "+ (en == null));
-            System.out.println("en is "+ (en == null));
+            logger.info("en is " + (en == null));
+            System.out.println("en is " + (en == null));
             while (en != null && en.hasMoreElements()) {
                 Object obj = en.nextElement();
                 if (obj instanceof SearchResult) {
                     SearchResult si = (SearchResult) obj;
-                    logger.info("name:   " + si.getName() +",input name:"+usr);
-                    System.out.println("name:   " + si.getName() +",input name:"+usr);
+                    logger.info("name:   " + si.getName() + ",input name:" + usr);
+                    System.out.println("name:   " + si.getName() + ",input name:" + usr);
                     Attributes attrs = si.getAttributes();
                     if (attrs == null) {
                         logger.info("No   attributes");
@@ -79,13 +79,13 @@ public class LdapService {
                         Object o = attr.get();
                         byte[] s = (byte[]) o;
                         String pwd2 = new String(s);
-                        logger.info("passwd: "+ pwd2 +",input passwd: "+pwd);
-                        System.out.println("passwd: "+ pwd2 +",input passwd: "+pwd);
+                        logger.info("passwd: " + pwd2 + ",input passwd: " + pwd);
+                        System.out.println("passwd: " + pwd2 + ",input passwd: " + pwd);
                         success = ldapHelper.verifySHA(pwd2, pwd);
                         return success;
                     }
                 } else {
-                    logger.info("{}",obj);
+                    logger.info("{}", obj);
                     System.out.println(obj);
                 }
                 System.out.println();

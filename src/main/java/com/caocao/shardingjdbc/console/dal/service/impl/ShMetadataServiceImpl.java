@@ -23,16 +23,17 @@ public class ShMetadataServiceImpl implements ShMetadataService {
     private ShMetadataMapper shMetadataMapper;
     @Resource
     private ShConfigMapper shConfigMapper;
+
     @Override
-    public void queryDataSourceList(Page<ShMetadataDto> page, String type,String keywords) {
-        int total =0;
-        List<ShMetadata> queryDataSourceList= null;
-        total = shMetadataMapper.totalCount(type,keywords);
-        queryDataSourceList= shMetadataMapper.queryDataSourceList(page.getOffset(),page.getLimit(),type,keywords);
+    public void queryDataSourceList(Page<ShMetadataDto> page, String type, String keywords) {
+        int total = 0;
+        List<ShMetadata> queryDataSourceList = null;
+        total = shMetadataMapper.totalCount(type, keywords);
+        queryDataSourceList = shMetadataMapper.queryDataSourceList(page.getOffset(), page.getLimit(), type, keywords);
         page.setTotal(total);
         List<ShMetadataDto> queryShMetadataDtoList = new ArrayList<>();
-        for (ShMetadata shMetadata:queryDataSourceList) {
-             ShMetadataDto shMetadataDto = new ShMetadataDto();
+        for (ShMetadata shMetadata : queryDataSourceList) {
+            ShMetadataDto shMetadataDto = new ShMetadataDto();
             shMetadataDto.setCreateBy(shMetadata.getCreateBy());
             shMetadataDto.setDataSourceName(shMetadata.getDataSourceName());
             shMetadataDto.setId(shMetadata.getId());
@@ -40,36 +41,36 @@ public class ShMetadataServiceImpl implements ShMetadataService {
             shMetadataDto.setType(shMetadata.getType());
             shMetadataDto.setProperties(shMetadata.getProperties());
             List<ShConfig> shConfigList = shConfigMapper.queryByDataSourceName(shMetadata.getDataSourceName());
-            if(CollectionUtils.isEmpty(shConfigList)){
+            if (CollectionUtils.isEmpty(shConfigList)) {
                 shMetadataDto.setQuote((byte) 0);
-            }else{
+            } else {
                 shMetadataDto.setQuote((byte) 1);
             }
 
-            if(Constants.MYSQL_INTERGER.equals(shMetadata.getType())){
+            if (Constants.MYSQL_INTERGER.equals(shMetadata.getType())) {
                 shMetadataDto.setTypeValue(Constants.MYSQL);
-            }else  if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadata.getType())){
+            } else if (Constants.MASTER_SLAVE_INTERGER.equals(shMetadata.getType())) {
                 shMetadataDto.setTypeValue(Constants.MASTER_SLAVE);
-            }else if(Constants.SHARDING_INTERGER.equals(shMetadata.getType())){
+            } else if (Constants.SHARDING_INTERGER.equals(shMetadata.getType())) {
                 shMetadataDto.setTypeValue(Constants.SHARDING);
             }
 
             JSONObject object = (JSONObject) JSONObject.parse(shMetadata.getProperties());
-            if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadata.getType())){
+            if (Constants.MASTER_SLAVE_INTERGER.equals(shMetadata.getType())) {
                 String masterDataSourceName = object.getString("masterDataSourceName");
                 JSONArray slaveDataSourceNames = object.getJSONArray("slaveDataSourceNames");
                 List<Integer> slaveIds = new ArrayList<>();
-                for(int i =0;i<slaveDataSourceNames.size();i++){
+                for (int i = 0; i < slaveDataSourceNames.size(); i++) {
                     String name = (String) slaveDataSourceNames.get(i);
                     slaveIds.add(this.queryNameById(name));
                 }
                 shMetadataDto.setSlaveIds(slaveIds);
                 shMetadataDto.setMasterId(this.queryNameById(masterDataSourceName));
-            }else if(Constants.SHARDING_INTERGER.equals(shMetadata.getType())){
+            } else if (Constants.SHARDING_INTERGER.equals(shMetadata.getType())) {
                 String dataSourceNames = object.getString("dataSourceNames");
                 String[] arrs = dataSourceNames.split(",");
                 List<Integer> dataSourceNamesIds = new ArrayList<>();
-                for(int j=0;j<arrs.length;j++){
+                for (int j = 0; j < arrs.length; j++) {
                     dataSourceNamesIds.add(this.queryNameById(arrs[j]));
                 }
                 shMetadataDto.setDataSourceNamesId(dataSourceNamesIds);
@@ -97,33 +98,33 @@ public class ShMetadataServiceImpl implements ShMetadataService {
 
     @Override
     public List<ShMetadata> queryDataSourceCount(String id) {
-        List<ShMetadata> list = shMetadataMapper.queryDataSourceCount();
-        return list;
+        return shMetadataMapper.queryDataSourceCount();
     }
 
     /**
      * 分开分表组装Properties属性
+     *
      * @param shMetadataDto
      */
     @Override
     public void installProperties(ShMetadataDto shMetadataDto) {
         Set<Object> dataSources = new HashSet<>();
-        Map<String,Object> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         Integer materId = shMetadataDto.getMasterId();
         List<Integer> slaveIds = shMetadataDto.getSlaveIds();
         ShMetadata masterDataSource = shMetadataMapper.queryInfoById(materId);
         dataSources.add(JSONObject.parse(masterDataSource.getProperties()));
-        map.put("name",shMetadataDto.getDataSourceName());
-        map.put("masterDataSourceName",masterDataSource.getDataSourceName());
+        map.put("name", shMetadataDto.getDataSourceName());
+        map.put("masterDataSourceName", masterDataSource.getDataSourceName());
         List<String> slaveDataSourceNames = new ArrayList<>();
-        for (Integer str:slaveIds) {
+        for (Integer str : slaveIds) {
             ShMetadata slaveDataSource = shMetadataMapper.queryInfoById(str);
             slaveDataSourceNames.add(slaveDataSource.getDataSourceName());
             dataSources.add(JSONObject.parse(slaveDataSource.getProperties()));
         }
-        map.put("slaveDataSourceNames",slaveDataSourceNames);
-        map.put("loadBalanceAlgorithmType",shMetadataDto.getLoadBalanceAlgorithmType());
-        map.put("dataSources",dataSources);
+        map.put("slaveDataSourceNames", slaveDataSourceNames);
+        map.put("loadBalanceAlgorithmType", shMetadataDto.getLoadBalanceAlgorithmType());
+        map.put("dataSources", dataSources);
         String json = JSONObject.toJSONString(map);
         shMetadataDto.setProperties(json);
     }
@@ -132,29 +133,29 @@ public class ShMetadataServiceImpl implements ShMetadataService {
     public void installPropertiesSharding(ShMetadataDto shMetadataDto) {
         Set<Object> dataSources = new HashSet<>();
         List<Object> masterSlaveRuleConfigs = new ArrayList<>();
-        Map<String,Object> map = new HashMap<>();
-        map.put("name",shMetadataDto.getDataSourceName());
-        map.put("tableRuleConfigs",JSONObject.parse(shMetadataDto.getTableRuleConfigs()));
-        map.put("bindingTableGroups",JSONObject.parse(shMetadataDto.getBindingTableGroups()));
-        map.put("props",JSONObject.parse(shMetadataDto.getProps()));
-        List<Integer> DataSourceNamesIds =  shMetadataDto.getDataSourceNamesId();
-        String dataSourceNames ="";
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", shMetadataDto.getDataSourceName());
+        map.put("tableRuleConfigs", JSONObject.parse(shMetadataDto.getTableRuleConfigs()));
+        map.put("bindingTableGroups", JSONObject.parse(shMetadataDto.getBindingTableGroups()));
+        map.put("props", JSONObject.parse(shMetadataDto.getProps()));
+        List<Integer> DataSourceNamesIds = shMetadataDto.getDataSourceNamesId();
+        String dataSourceNames = "";
         List<String> masterNameList = new ArrayList<>();
-        for(int i =0;i<DataSourceNamesIds.size();i++){
+        for (int i = 0; i < DataSourceNamesIds.size(); i++) {
             ShMetadata shMetadatas = shMetadataMapper.queryInfoById(DataSourceNamesIds.get(i));
-            if(i==DataSourceNamesIds.size()-1){
+            if (i == DataSourceNamesIds.size() - 1) {
                 dataSourceNames += shMetadatas.getDataSourceName();
-            }else{
-                dataSourceNames += shMetadatas.getDataSourceName()+",";
+            } else {
+                dataSourceNames += shMetadatas.getDataSourceName() + ",";
             }
             //如果在properties中出现相同的数据库名信息，以master的为准
-            JSONObject object =null;
-            if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())){
+            JSONObject object = null;
+            if (Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())) {
                 object = (JSONObject) JSONObject.parse(shMetadatas.getProperties());
-                JSONArray arrays  = object.getJSONArray("dataSources");
-                for(int j = 0;j<arrays.size();j++){
-                    JSONObject object1 = (JSONObject)JSONObject.parse(String.valueOf(arrays.get(j)));
-                    if(!masterNameList.contains(object1.getString("name"))){//如果master引用的mysql数据源都相同只保存第一个
+                JSONArray arrays = object.getJSONArray("dataSources");
+                for (int j = 0; j < arrays.size(); j++) {
+                    JSONObject object1 = (JSONObject) JSONObject.parse(String.valueOf(arrays.get(j)));
+                    if (!masterNameList.contains(object1.getString("name"))) {//如果master引用的mysql数据源都相同只保存第一个
                         dataSources.add(arrays.get(j));
                     }
                     masterNameList.add(object1.getString("name"));
@@ -163,33 +164,33 @@ public class ShMetadataServiceImpl implements ShMetadataService {
 //                    dataSources.add(array);
 //                }
             }
-            if(Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())){
-                Map<String,Object> map1 = new HashMap<>();
+            if (Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())) {
+                Map<String, Object> map1 = new HashMap<>();
                 String masterDataSourceName = object.getString("masterDataSourceName");
                 JSONArray slaveDataSourceNames = object.getJSONArray("slaveDataSourceNames");
                 String name = object.getString("name");
                 String loadBalanceAlgorithmType = object.getString("loadBalanceAlgorithmType");
-                map1.put("masterDataSourceName",masterDataSourceName);
-                map1.put("slaveDataSourceNames",slaveDataSourceNames);
-                map1.put("name",name);
-                map1.put("loadBalanceAlgorithmType",loadBalanceAlgorithmType);
+                map1.put("masterDataSourceName", masterDataSourceName);
+                map1.put("slaveDataSourceNames", slaveDataSourceNames);
+                map1.put("name", name);
+                map1.put("loadBalanceAlgorithmType", loadBalanceAlgorithmType);
                 masterSlaveRuleConfigs.add(map1);
             }
         }
         //上面有添加则此次添加跳过
-        for(int i =0;i<DataSourceNamesIds.size();i++) {
+        for (int i = 0; i < DataSourceNamesIds.size(); i++) {
             ShMetadata shMetadatas = shMetadataMapper.queryInfoById(DataSourceNamesIds.get(i));
             if (!Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())) {
-                JSONObject object2= (JSONObject) JSONObject.parse(shMetadatas.getProperties());
-                if(!masterNameList.contains(object2.getString("name"))){
+                JSONObject object2 = (JSONObject) JSONObject.parse(shMetadatas.getProperties());
+                if (!masterNameList.contains(object2.getString("name"))) {
                     dataSources.add(object2);
                 }
 
             }
         }
-        map.put("dataSourceNames",dataSourceNames);
-        map.put("dataSources",dataSources);
-        map.put("masterSlaveRuleConfigs",masterSlaveRuleConfigs);
+        map.put("dataSourceNames", dataSourceNames);
+        map.put("dataSources", dataSources);
+        map.put("masterSlaveRuleConfigs", masterSlaveRuleConfigs);
         String json = JSONObject.toJSONString(map);
         shMetadataDto.setProperties(json);
     }
