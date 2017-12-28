@@ -6,6 +6,7 @@ import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.framework.recipes.cache.*;
 import org.apache.curator.retry.ExponentialBackoffRetry;
 import org.apache.zookeeper.CreateMode;
+import org.apache.zookeeper.KeeperException;
 import org.apache.zookeeper.data.Stat;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -15,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import java.util.List;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author liuke1@geely.com
@@ -26,15 +28,15 @@ public class CuratorService {
 
   private CuratorFramework client;
 
-  @Value("${zk.address}")
-  private String connectString;
+//  @Value("${zk.address}")
+//  private  String connectString="";
   @Value("${zk.connectionTimeoutMs:5000}")
   private int connectionTimeoutMs;
   @Value("${zk.sessionTimeoutMs:60000}")
   private int sessionTimeoutMs;
 
-  @PostConstruct
-  public void init() {
+//  @PostConstruct
+  public Boolean init(String connectString) {
     client = CuratorFrameworkFactory.builder()
         .connectString(connectString)
         .connectionTimeoutMs(connectionTimeoutMs)
@@ -42,7 +44,20 @@ public class CuratorService {
         .canBeReadOnly(false)
         .retryPolicy(new ExponentialBackoffRetry(1000, 3))
         .build();
+    return initCuratorClient();
+  }
+
+  private Boolean initCuratorClient() {
     client.start();
+    try {
+      if (!client.blockUntilConnected( connectionTimeoutMs,TimeUnit.MILLISECONDS)) {
+        client.close();
+        return false;
+      }
+    } catch (InterruptedException e) {
+      e.printStackTrace();
+    }
+    return  true;
   }
 
 

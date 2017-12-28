@@ -102,13 +102,17 @@ public class ShConfigController {
         if(!NumberUtils.isNumber(type)){
             return result.fill(JsonResponseMsg.CODE_FAIL,"参数错误");
         }
+        Boolean isValid = curatorService.init(shConfigDto.getRegServerList());
+        if(!isValid){
+            return result.fill(JsonResponseMsg.CODE_FAIL,"zk链接超时");
+        }
         //数据同步到zk中
         if(Constants.IS_QUOTE.equals(NumberUtils.toByte(type))){
             String dataSourceName = shConfigDto.getDataSourceName();
             ShMetadataDto shMetadataDto = shMetadataService.queryByName(dataSourceName);
             JSONObject properties = (JSONObject) JSONObject.parse(shMetadataDto.getProperties());
             JSONArray arrays = properties.getJSONArray("dataSources");
-            String dataSourcePth =Constants.CONSOLE+"/"+shConfigDto.getRegNamespace()+Constants.CONFIG+Constants.DATASOURCE;
+            String dataSourcePth = "/"+shConfigDto.getRegNamespace()+"/"+shConfigDto.getDataSourceName()+Constants.CONFIG+Constants.DATASOURCE;
             try {
                 if(!curatorService.isExists(dataSourcePth)){
                     curatorService.create(dataSourcePth,JSONObject.toJSONString(arrays));
@@ -127,7 +131,7 @@ public class ShConfigController {
                     map.put("name",name);
                     map.put("loadBalanceAlgorithmType",loadBalanceAlgorithmType);
                     String json = JSONObject.toJSONString(map);
-                    String masterslaveRulePath = Constants.CONSOLE+"/"+shConfigDto.getRegNamespace() +Constants.CONFIG+Constants.MASTERSLAVE+Constants.RUL;
+                    String masterslaveRulePath ="/"+shConfigDto.getRegNamespace()+"/"+shConfigDto.getDataSourceName()+Constants.CONFIG+Constants.MASTERSLAVE+Constants.RUL;
                     if(!curatorService.isExists(masterslaveRulePath)){
                         curatorService.create(masterslaveRulePath,json);
                     }else {
@@ -142,14 +146,14 @@ public class ShConfigController {
                     map.put("masterSlaveRuleConfigs",masterSlaveRuleConfigs);
                     map.put("tableRuleConfigs",tableRuleConfigs);
                     String json = JSONObject.toJSONString(map);
-                    String shardingRulePath = Constants.CONSOLE+"/"+shConfigDto.getRegNamespace()+Constants.CONFIG+Constants.SHARDINGS+Constants.RUL;
+                    String shardingRulePath ="/"+shConfigDto.getRegNamespace()+"/"+shConfigDto.getDataSourceName()+Constants.CONFIG+Constants.SHARDINGS+Constants.RUL;
                     if(!curatorService.isExists(shardingRulePath)){
                         curatorService.create(shardingRulePath,json);
                     }else {
                         curatorService.update(shardingRulePath,json);
                     }
                     String props = properties.getString("props");
-                    String shardingPropsPath = Constants.CONSOLE+"/"+shConfigDto.getRegNamespace()+Constants.CONFIG+Constants.SHARDINGS+Constants.PROPS;
+                    String shardingPropsPath ="/"+shConfigDto.getRegNamespace()+"/"+shConfigDto.getDataSourceName()+Constants.CONFIG+Constants.SHARDINGS+Constants.PROPS;
                     if(!curatorService.isExists(shardingPropsPath)){
                         curatorService.create(shardingPropsPath,props);
                     }else {
