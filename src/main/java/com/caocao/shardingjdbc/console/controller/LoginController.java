@@ -1,5 +1,6 @@
 package com.caocao.shardingjdbc.console.controller;
 
+import com.caocao.shardingjdbc.console.common.Encryption;
 import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
 import com.caocao.shardingjdbc.console.dal.ldap.LdapService;
 import org.slf4j.Logger;
@@ -20,9 +21,10 @@ public class LoginController {
     @ResponseBody
     public JsonResponseMsg login(@RequestParam("username") String username, @RequestParam("password") String password) {
         JsonResponseMsg result = new JsonResponseMsg();
+        System.out.println(new String(Encryption.decode(username)));
         boolean flag = false;
         try {
-            flag = ldapService.authenticate(username, password);
+            flag = ldapService.authenticate(new String(Encryption.decode(username)), new String(Encryption.decode(password)));
         } catch (Exception e) {
             flag = false;
             logger.error("登录异常", e);

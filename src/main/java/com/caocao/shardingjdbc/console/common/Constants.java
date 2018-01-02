@@ -30,14 +30,14 @@ public class Constants {
   // Zookeeper
   public static final String CONSOLE = "/console";
   public static final String CONFIG = "/config";
-  public static final String DATASOURCE = "/datasource ";
+  public static final String DATASOURCE = "/datasource";
 
-  public static final String SHARDINGS = "/sharding ";
-  public static final String PROPS = "/props ";
+  public static final String SHARDINGS ="/sharding";
+  public static final String PROPS = "/props";
 
   public static final String MASTERSLAVE = "/masterslave";
   public static final  String RUL = "/rule";
-  public static final String CONFIGMAP = "/configmap ";
+  public static final String CONFIGMAP = "/configmap";
 
 
 }

@@ -132,6 +132,13 @@ public class ShConfigController {
                     } else {
                         curatorService.update(masterslaveRulePath, json);
                     }
+                    String configmapPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.MASTERSLAVE + Constants.CONFIGMAP;
+                    String rest = "{}";
+                    if(!curatorService.isExists(configmapPath)){
+                        curatorService.create(configmapPath, rest);
+                    }else{
+                        curatorService.update(configmapPath, rest);
+                    }
                 } else if (Constants.SHARDING_INTERGER.equals(datatype)) {
                     Map<String, Object> map = new HashMap<>();
                     JSONArray bindingTableGroups = properties.getJSONArray("bindingTableGroups");
@@ -154,6 +161,14 @@ public class ShConfigController {
                     } else {
                         curatorService.update(shardingPropsPath, props);
                     }
+                    String configmapPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.SHARDINGS + Constants.CONFIGMAP;
+                    String rest = "{}";
+                    if(!curatorService.isExists(configmapPath)){
+                        curatorService.create(configmapPath, rest);
+                    }else{
+                        curatorService.update(configmapPath, rest);
+                    }
+
                 }
             } catch (Exception e) {
                 log.error("数据同步zk出错", e);

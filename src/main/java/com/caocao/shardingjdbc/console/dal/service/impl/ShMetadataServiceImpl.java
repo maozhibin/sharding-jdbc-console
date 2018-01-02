@@ -155,10 +155,11 @@ public class ShMetadataServiceImpl implements ShMetadataService {
                 JSONArray arrays = object.getJSONArray("dataSources");
                 for (int j = 0; j < arrays.size(); j++) {
                     JSONObject object1 = (JSONObject) JSONObject.parse(String.valueOf(arrays.get(j)));
-                    if (!masterNameList.contains(object1.getString("name"))) {//如果master引用的mysql数据源都相同只保存第一个
+                    String name = object1.getString("shardingJdbcDataSourceName");
+                    if (!masterNameList.contains(object1.getString("shardingJdbcDataSourceName"))) {//如果master引用的mysql数据源都相同只保存第一个
                         dataSources.add(arrays.get(j));
                     }
-                    masterNameList.add(object1.getString("name"));
+                    masterNameList.add(object1.getString("shardingJdbcDataSourceName"));
                 }
 //                for (Object array:arrays) {
 //                    dataSources.add(array);
@@ -168,7 +169,7 @@ public class ShMetadataServiceImpl implements ShMetadataService {
                 Map<String, Object> map1 = new HashMap<>();
                 String masterDataSourceName = object.getString("masterDataSourceName");
                 JSONArray slaveDataSourceNames = object.getJSONArray("slaveDataSourceNames");
-                String name = object.getString("name");
+                String name = object.getString("shardingJdbcDataSourceName");
                 String loadBalanceAlgorithmType = object.getString("loadBalanceAlgorithmType");
                 map1.put("masterDataSourceName", masterDataSourceName);
                 map1.put("slaveDataSourceNames", slaveDataSourceNames);
@@ -182,7 +183,7 @@ public class ShMetadataServiceImpl implements ShMetadataService {
             ShMetadata shMetadatas = shMetadataMapper.queryInfoById(DataSourceNamesIds.get(i));
             if (!Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())) {
                 JSONObject object2 = (JSONObject) JSONObject.parse(shMetadatas.getProperties());
-                if (!masterNameList.contains(object2.getString("name"))) {
+                if (!masterNameList.contains(object2.getString("shardingJdbcDataSourceName"))) {
                     dataSources.add(object2);
                 }
 
