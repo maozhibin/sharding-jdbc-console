@@ -167,9 +167,10 @@ public class ShMetadataServiceImpl implements ShMetadataService {
             }
             if (Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())) {
                 Map<String, Object> map1 = new HashMap<>();
+//                String name = object.getString("name");
                 String masterDataSourceName = object.getString("masterDataSourceName");
                 JSONArray slaveDataSourceNames = object.getJSONArray("slaveDataSourceNames");
-                String name = object.getString("shardingJdbcDataSourceName");
+                String name = object.getString("name");
                 String loadBalanceAlgorithmType = object.getString("loadBalanceAlgorithmType");
                 map1.put("masterDataSourceName", masterDataSourceName);
                 map1.put("slaveDataSourceNames", slaveDataSourceNames);

@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.caocao.shardingjdbc.console.common.Constants;
 import com.caocao.shardingjdbc.console.common.CuratorService;
 import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
+import com.caocao.shardingjdbc.console.common.Utils;
 import com.caocao.shardingjdbc.console.dal.ext.Page;
 import com.caocao.shardingjdbc.console.dal.model.ShConfig;
 import com.caocao.shardingjdbc.console.dal.service.ShConfigService;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -106,6 +109,14 @@ public class ShConfigController {
             ShMetadataDto shMetadataDto = shMetadataService.queryByName(dataSourceName);
             JSONObject properties = (JSONObject) JSONObject.parse(shMetadataDto.getProperties());
             JSONArray arrays = properties.getJSONArray("dataSources");
+            for(int i=0;i<arrays.size();i++){
+                JSONObject object = (JSONObject) arrays.get(i);
+                String password = Utils.druidDec(object.getString("password"));
+                object.remove("password");
+                object.put("password",password);
+                object.remove("connectionProperties");
+                object.remove("filter");
+            }
             String dataSourcePth = "/" + shConfigDto.getRegNamespace() + "/"
                     + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.DATASOURCE;
             try {
