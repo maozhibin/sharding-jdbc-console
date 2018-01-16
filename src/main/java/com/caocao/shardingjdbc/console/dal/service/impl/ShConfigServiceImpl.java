@@ -1,8 +1,12 @@
 package com.caocao.shardingjdbc.console.dal.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.caocao.shardingjdbc.console.common.Constants;
 import com.caocao.shardingjdbc.console.common.CuratorService;
 import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
+import com.caocao.shardingjdbc.console.common.Utils;
 import com.caocao.shardingjdbc.console.dal.dao.ShConfigMapper;
 import com.caocao.shardingjdbc.console.dal.ext.Page;
 import com.caocao.shardingjdbc.console.dal.model.ShConfig;
@@ -45,7 +49,17 @@ public class ShConfigServiceImpl implements ShConfigService {
                 String dataSourcePth = "/" + shConfigDto.getRegNamespace() + "/"
                         + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.DATASOURCE;
                 String dataSource = curatorService.getData(dataSourcePth);
-                map.put("dataSource",dataSource);
+//                JSONObject object = JSON.parseObject(dataSource);
+
+                JSONArray object1 = (JSONArray) JSONObject.parse(dataSource);
+               for(int i=0;i<object1.size();i++){
+                   JSONObject object = (JSONObject) object1.get(i);
+                   String password = Utils.druidEnc(object.getString("password"));
+                   object.remove("password");
+                   object.put("password",password);
+               }
+
+                map.put("dataSource",JSONObject.toJSONString(object1));
                 if(Constants.MASTER_SLAVE_INTERGER.equals(datatype)){
                     String masterslaveRulePath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.MASTERSLAVE + Constants.RUL;
                     String masterslaveRule= curatorService.getData(masterslaveRulePath);
