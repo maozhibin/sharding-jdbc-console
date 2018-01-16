@@ -37,11 +37,4 @@ public class LoginController {
             return result.fill(JsonResponseMsg.CODE_FAIL,"登录认证异常");
         }
     }
-//    @RequestMapping(value = "/logout", method = RequestMethod.POST)
-//    @ResponseBody
-//    public JsonResponseMsg logout() {
-//        JsonResponseMsg result = new JsonResponseMsg();
-//        return result.fill(JsonResponseMsg.CODE_FAIL,"登录认证异常");
-//    }
-
 }

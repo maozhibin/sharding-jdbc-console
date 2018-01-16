@@ -2,6 +2,8 @@ package com.caocao.shardingjdbc.console.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 public class ShConfigDto {
     private Long id;
@@ -21,4 +23,6 @@ public class ShConfigDto {
     private String createBy;
 
     private String updateBy;
+
+    private Map<String,Object> zkInfo;
 }
