@@ -30,6 +30,8 @@ public class ShMetadataDto {
 
     private List<Integer> dataSourceNamesId;//分开分表使用的数据库id
 
+    private Integer defaultDataSourceId;
+
     private String dataSourceNames;
 
     private String tableRuleConfigs;
@@ -37,5 +39,4 @@ public class ShMetadataDto {
     private String bindingTableGroups;
 
     private String props;
-
 }

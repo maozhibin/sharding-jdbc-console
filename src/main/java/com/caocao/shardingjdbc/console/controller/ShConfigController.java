@@ -152,12 +152,14 @@ public class ShConfigController {
                     }
                 } else if (Constants.SHARDING_INTERGER.equals(datatype)) {
                     Map<String, Object> map = new HashMap<>();
+                    String defaultDataSourceName = properties.getString("defaultDataSourceName");
                     JSONArray bindingTableGroups = properties.getJSONArray("bindingTableGroups");
                     JSONArray masterSlaveRuleConfigs = properties.getJSONArray("masterSlaveRuleConfigs");
                     JSONArray tableRuleConfigs = properties.getJSONArray("tableRuleConfigs");
                     map.put("bindingTableGroups", bindingTableGroups);
                     map.put("masterSlaveRuleConfigs", masterSlaveRuleConfigs);
                     map.put("tableRuleConfigs", tableRuleConfigs);
+                    map.put("defaultDataSourceName", defaultDataSourceName);
                     String json = JSONObject.toJSONString(map);
                     String shardingRulePath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.SHARDINGS + Constants.RUL;
                     if (!curatorService.isExists(shardingRulePath)) {

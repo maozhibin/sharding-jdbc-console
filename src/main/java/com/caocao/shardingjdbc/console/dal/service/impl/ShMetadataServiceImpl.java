@@ -68,6 +68,10 @@ public class ShMetadataServiceImpl implements ShMetadataService {
                 shMetadataDto.setMasterId(this.queryNameById(masterDataSourceName));
             } else if (Constants.SHARDING_INTERGER.equals(shMetadata.getType())) {
                 String dataSourceNames = object.getString("dataSourceNames");
+                String defaultDataSourceName = object.getString("defaultDataSourceName");
+                if(this.queryNameById(defaultDataSourceName)!=null){
+                    shMetadataDto.setDefaultDataSourceId(this.queryNameById(defaultDataSourceName));
+                }
                 String[] arrs = dataSourceNames.split(",");
                 List<Integer> dataSourceNamesIds = new ArrayList<>();
                 for (int j = 0; j < arrs.length; j++) {
@@ -135,6 +139,13 @@ public class ShMetadataServiceImpl implements ShMetadataService {
         List<Object> masterSlaveRuleConfigs = new ArrayList<>();
         Map<String, Object> map = new HashMap<>();
         map.put("name", shMetadataDto.getDataSourceName());
+        ShMetadata defaultShMetadata = shMetadataMapper.queryInfoById(shMetadataDto.getDefaultDataSourceId());
+        if(defaultShMetadata!=null){
+            map.put("defaultDataSourceName", defaultShMetadata.getDataSourceName());
+        }else{
+            map.put("defaultDataSourceName","");
+        }
+
         map.put("tableRuleConfigs", JSONObject.parse(shMetadataDto.getTableRuleConfigs()));
         map.put("bindingTableGroups", JSONObject.parse(shMetadataDto.getBindingTableGroups()));
         map.put("props", JSONObject.parse(shMetadataDto.getProps()));
