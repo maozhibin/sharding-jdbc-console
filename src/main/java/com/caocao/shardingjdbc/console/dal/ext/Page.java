@@ -5,8 +5,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 
 /**
- * <p>文件名称：Page.java</p> <p>文件描述：</p> <p>版权所有： 版权所有(C)2016-2099</p> <p>公   司： 优行科技 </p> <p>内容摘要：
- * </p> <p>其他说明： </p> <p>完成日期：2017年01月17日</p>
+ * <p>文件名称：Page.java</p>
+ * <p>文件描述：</p>
+ * <p>版权所有： 版权所有(C)2016-2099</p>
+ * <p>公   司： 优行科技 </p>
+ * <p>内容摘要：</p>
+ * <p>其他说明： </p>
+ * <p>完成日期：2017年01月17日</p>
  *
  * @author liuke1@geely.com
  * @version 1.0

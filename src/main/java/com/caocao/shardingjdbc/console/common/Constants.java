@@ -1,10 +1,5 @@
 package com.caocao.shardingjdbc.console.common;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
-
 /**
  * @author liuke1@geely.com
  * @version 1.0

@@ -69,7 +69,7 @@ public class ShMetadataServiceImpl implements ShMetadataService {
             } else if (Constants.SHARDING_INTERGER.equals(shMetadata.getType())) {
                 String dataSourceNames = object.getString("dataSourceNames");
                 String defaultDataSourceName = object.getString("defaultDataSourceName");
-                if(this.queryNameById(defaultDataSourceName)!=null){
+                if (this.queryNameById(defaultDataSourceName) != null) {
                     shMetadataDto.setDefaultDataSourceId(this.queryNameById(defaultDataSourceName));
                 }
                 String[] arrs = dataSourceNames.split(",");
@@ -140,10 +140,10 @@ public class ShMetadataServiceImpl implements ShMetadataService {
         Map<String, Object> map = new HashMap<>();
         map.put("name", shMetadataDto.getDataSourceName());
         ShMetadata defaultShMetadata = shMetadataMapper.queryInfoById(shMetadataDto.getDefaultDataSourceId());
-        if(defaultShMetadata!=null){
+        if (defaultShMetadata != null) {
             map.put("defaultDataSourceName", defaultShMetadata.getDataSourceName());
-        }else{
-            map.put("defaultDataSourceName","");
+        } else {
+            map.put("defaultDataSourceName", "");
         }
 
         map.put("tableRuleConfigs", JSONObject.parse(shMetadataDto.getTableRuleConfigs()));
@@ -172,13 +172,9 @@ public class ShMetadataServiceImpl implements ShMetadataService {
                     }
                     masterNameList.add(object1.getString("shardingJdbcDataSourceName"));
                 }
-//                for (Object array:arrays) {
-//                    dataSources.add(array);
-//                }
             }
             if (Constants.MASTER_SLAVE_INTERGER.equals(shMetadatas.getType())) {
                 Map<String, Object> map1 = new HashMap<>();
-//                String name = object.getString("name");
                 String masterDataSourceName = object.getString("masterDataSourceName");
                 JSONArray slaveDataSourceNames = object.getJSONArray("slaveDataSourceNames");
                 String name = object.getString("name");

@@ -1,11 +1,9 @@
 package com.caocao.shardingjdbc.console.dal.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.caocao.shardingjdbc.console.common.Constants;
 import com.caocao.shardingjdbc.console.common.CuratorService;
-import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
 import com.caocao.shardingjdbc.console.common.Utils;
 import com.caocao.shardingjdbc.console.dal.dao.ShConfigMapper;
 import com.caocao.shardingjdbc.console.dal.ext.Page;
@@ -49,7 +47,6 @@ public class ShConfigServiceImpl implements ShConfigService {
                 String dataSourcePth = "/" + shConfigDto.getRegNamespace() + "/"
                         + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.DATASOURCE;
                 String dataSource = curatorService.getData(dataSourcePth);
-//                JSONObject object = JSON.parseObject(dataSource);
 
                 JSONArray object1 = (JSONArray) JSONObject.parse(dataSource);
                for(int i=0;i<object1.size();i++){

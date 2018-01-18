@@ -3,17 +3,16 @@ package com.caocao.shardingjdbc.console.controller;
 import com.caocao.shardingjdbc.console.common.Encryption;
 import com.caocao.shardingjdbc.console.common.JsonResponseMsg;
 import com.caocao.shardingjdbc.console.dal.ldap.LdapService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @Controller
+@Slf4j
 @RequestMapping("/user")
 public class LoginController {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
     @Autowired
     private LdapService ldapService;
 
@@ -21,20 +20,19 @@ public class LoginController {
     @ResponseBody
     public JsonResponseMsg login(@RequestParam("username") String username, @RequestParam("password") String password) {
         JsonResponseMsg result = new JsonResponseMsg();
-        System.out.println(new String(Encryption.decode(username)));
         boolean flag = false;
         try {
             flag = ldapService.authenticate(new String(Encryption.decode(username)), new String(Encryption.decode(password)));
         } catch (Exception e) {
             flag = false;
-            logger.error("登录异常", e);
+            log.error("{}登录异常", new String(Encryption.decode(username)), e);
         }
         if (flag) {
-            logger.info("登录认证success");
-            return result.fill(JsonResponseMsg.CODE_SUCCESS,"登录认证success");
+            log.info("登录认证success:{}", new String(Encryption.decode(username)));
+            return result.fill(JsonResponseMsg.CODE_SUCCESS, "登录认证success");
         } else {
-            logger.info("登录认证异常");
-            return result.fill(JsonResponseMsg.CODE_FAIL,"登录认证异常");
+            log.info("登录认证异常,{}", new String(Encryption.decode(username)));
+            return result.fill(JsonResponseMsg.CODE_FAIL, "登录认证异常");
         }
     }
 }
