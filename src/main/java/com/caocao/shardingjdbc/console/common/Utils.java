@@ -1,10 +1,13 @@
 package com.caocao.shardingjdbc.console.common;
 
 import com.alibaba.druid.filter.config.ConfigTools;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class Utils {
     /**
      * 解密
+     *
      * @param encPassword
      * @return
      */
@@ -13,26 +16,23 @@ public class Utils {
         try {
             encString = ConfigTools.decrypt(encPassword);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("error druidDec:{}", encPassword, e);
         }
         return encString;
     }
 
     /**
      * 加密
+     *
      * @param password
      * @return
      */
-    public static String druidEnc(String password)
-    {
+    public static String druidEnc(String password) {
         String encString = null;
-        try
-        {
+        try {
             encString = ConfigTools.encrypt(password);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
+        } catch (Exception e) {
+            log.error("error druidEnc:{}", password, e);
         }
         return encString;
     }
