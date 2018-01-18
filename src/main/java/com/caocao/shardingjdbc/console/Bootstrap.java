@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.PropertySource;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -18,6 +19,7 @@ import java.util.concurrent.CountDownLatch;
 @ServletComponentScan
 @MapperScan(value="com.caocao.shardingjdbc.console.dal.dao")
 @SpringBootApplication
+//@PropertySource(value={"/etc/caocao/console/console.properties"})
 public class Bootstrap {
     @Bean
     public CountDownLatch closeLatch() {
