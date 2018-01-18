@@ -1,19 +1,15 @@
 package com.caocao.shardingjdbc.console.dal.ldap;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 @Component("ldapConfig")
+@ConfigurationProperties(prefix = "ldap")
 public class LdapConfig {
-    @Value(value = "${ldap.account}")
     private String account;
-    @Value(value = "${ldap.password}")
     private String password;
-    @Value(value = "${ldap.providerUrl}")
     private String providerUrl;
-    @Value(value = "${ldap.securityAuthentication}")
     private String securityAuthentication;
-    @Value(value = "${ldap.root}")
     private String root;
 
     public String getRoot() {

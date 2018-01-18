@@ -1,7 +1,6 @@
 package com.caocao.shardingjdbc.console.dal.ldap;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +16,8 @@ import java.security.NoSuchAlgorithmException;
  * @author Adam Retter <adam.retter@googlemail.com>
  */
 @Service
+@Slf4j
 public class LdapService {
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
-
     @Autowired
     private LdapHelper ldapHelper;
 
@@ -46,7 +44,7 @@ public class LdapService {
                     ctx.close();
                 }
             } catch (NamingException namingException) {
-                namingException.printStackTrace();
+                log.error("error add User", namingException);
             }
         }
         return false;
@@ -61,39 +59,32 @@ public class LdapService {
             constraints.setSearchScope(SearchControls.SUBTREE_SCOPE);
             // constraints.setSearchScope(SearchControls.ONELEVEL_SCOPE);
             NamingEnumeration en = ctx.search("", "cn=" + usr, constraints); // 查询所有用户
-            logger.info("en is " + (en == null));
-            System.out.println("en is " + (en == null));
+            log.info("en is " + (en == null));
             while (en != null && en.hasMoreElements()) {
                 Object obj = en.nextElement();
                 if (obj instanceof SearchResult) {
                     SearchResult si = (SearchResult) obj;
-                    logger.info("name:   " + si.getName() + ",input name:" + usr);
-                    System.out.println("name:   " + si.getName() + ",input name:" + usr);
+                    log.info("name:   " + si.getName() + ",input name:" + usr);
                     Attributes attrs = si.getAttributes();
                     if (attrs == null) {
-                        logger.info("No   attributes");
-                        System.out.println("No   attributes");
+                        log.info("No   attributes");
 
                     } else {
                         Attribute attr = attrs.get("userPassword");
                         Object o = attr.get();
                         byte[] s = (byte[]) o;
                         String pwd2 = new String(s);
-                        logger.info("passwd: " + pwd2 + ",input passwd: " + pwd);
-                        System.out.println("passwd: " + pwd2 + ",input passwd: " + pwd);
+                        log.info("passwd: " + pwd2 + ",input passwd: " + pwd);
                         success = ldapHelper.verifySHA(pwd2, pwd);
                         return success;
                     }
                 } else {
-                    logger.info("{}", obj);
-                    System.out.println(obj);
+                    log.info("{}", obj);
                 }
-                System.out.println();
             }
             ctx.close();
         } catch (NoSuchAlgorithmException ex) {
-            logger.info(ex.getLocalizedMessage());
-            System.out.println(ex.getLocalizedMessage());
+            log.info(ex.getLocalizedMessage());
             try {
                 if (ctx != null) {
                     ctx.close();
@@ -102,14 +93,13 @@ public class LdapService {
                 namingException.printStackTrace();
             }
         } catch (NamingException ex) {
-            logger.info(ex.getLocalizedMessage());
-            System.out.println(ex.getLocalizedMessage());
+            log.info(ex.getLocalizedMessage());
             try {
                 if (ctx != null) {
                     ctx.close();
                 }
             } catch (NamingException namingException) {
-                namingException.printStackTrace();
+                log.error("error auth user", namingException);
             }
         }
         return false;

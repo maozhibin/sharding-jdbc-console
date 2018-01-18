@@ -1,0 +1,62 @@
+2018-01-16 09:22:34 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 9636 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 09:22:34 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 09:22:38 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 5.182 seconds (JVM running for 7.63)
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapHelper 36 [INFO] ldap://118.178.135.38:10389/ou=Users,dc=caocao,dc=com
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapHelper 37 [INFO] devops,ou=Users,dc=caocao,dc=com
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapHelper 38 [INFO] ugoc1818
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapHelper 43 [INFO] 认证成功
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapService 64 [INFO] en is false
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapService 70 [INFO] name:   cn=zhangxiaoping,input name:zhangxiaoping 
+ 2018-01-16 09:28:30 c.c.s.c.d.l.LdapService 82 [INFO] passwd: {SSHA}1Q5DoDxBeOjoclNSIBrvdzBOThgPuecB,input passwd: ugoc1818
+ 2018-01-16 09:28:30 c.c.s.c.c.LoginController 33 [INFO] 登录认证success
+ 2018-01-16 13:38:15 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 10848 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 13:38:15 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 13:38:20 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 6.378 seconds (JVM running for 7.853)
+ 2018-01-16 14:42:04 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 39744 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 14:42:04 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 14:42:08 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 5.196 seconds (JVM running for 6.896)
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapHelper 36 [INFO] ldap://118.178.135.38:10389/ou=Users,dc=caocao,dc=com
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapHelper 37 [INFO] devops,ou=Users,dc=caocao,dc=com
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapHelper 38 [INFO] ugoc1818
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapHelper 43 [INFO] 认证成功
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapService 64 [INFO] en is false
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapService 70 [INFO] name:   cn=zhangxiaoping,input name:zhangxiaoping 
+ 2018-01-16 14:42:44 c.c.s.c.d.l.LdapService 82 [INFO] passwd: {SSHA}1Q5DoDxBeOjoclNSIBrvdzBOThgPuecB,input passwd: ugoc1818
+ 2018-01-16 14:42:44 c.c.s.c.c.LoginController 33 [INFO] 登录认证success
+ 2018-01-16 15:44:28 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 31052 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:44:28 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:44:31 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.483 seconds (JVM running for 5.717)
+ 2018-01-16 15:46:22 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 28608 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:46:22 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:46:25 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.401 seconds (JVM running for 5.721)
+ 2018-01-16 15:48:00 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 32060 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:48:00 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:48:04 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.366 seconds (JVM running for 5.741)
+ 2018-01-16 15:48:48 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 17404 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:48:48 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:48:51 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.383 seconds (JVM running for 5.562)
+ 2018-01-16 15:51:21 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 15128 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:51:21 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:51:25 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.08 seconds (JVM running for 5.519)
+ 2018-01-16 15:53:35 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 35344 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:53:35 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:53:38 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.65 seconds (JVM running for 5.846)
+ 2018-01-16 15:54:40 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 14864 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:54:40 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:54:43 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.754 seconds (JVM running for 6.09)
+ 2018-01-16 15:56:49 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 24228 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:56:49 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:56:52 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.439 seconds (JVM running for 5.617)
+ 2018-01-16 15:58:23 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 36516 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 15:58:23 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 15:58:26 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.494 seconds (JVM running for 6.436)
+ 2018-01-16 16:38:04 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 33864 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 16:38:04 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 16:38:07 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.265 seconds (JVM running for 5.637)
+ 2018-01-16 17:58:11 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 30288 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 17:58:11 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 17:58:14 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.25 seconds (JVM running for 5.399)
+ 2018-01-16 18:02:18 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 48460 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-16 18:02:18 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-16 18:02:21 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 4.282 seconds (JVM running for 6.667)
+ 

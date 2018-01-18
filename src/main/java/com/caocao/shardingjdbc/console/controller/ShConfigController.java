@@ -18,9 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @CrossOrigin
@@ -109,11 +107,11 @@ public class ShConfigController {
             ShMetadataDto shMetadataDto = shMetadataService.queryByName(dataSourceName);
             JSONObject properties = (JSONObject) JSONObject.parse(shMetadataDto.getProperties());
             JSONArray arrays = properties.getJSONArray("dataSources");
-            for(int i=0;i<arrays.size();i++){
+            for (int i = 0; i < arrays.size(); i++) {
                 JSONObject object = (JSONObject) arrays.get(i);
                 String password = Utils.druidDec(object.getString("password"));
                 object.remove("password");
-                object.put("password",password);
+                object.put("password", password);
                 object.remove("connectionProperties");
                 object.remove("filter");
             }
@@ -145,9 +143,9 @@ public class ShConfigController {
                     }
                     String configmapPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.MASTERSLAVE + Constants.CONFIGMAP;
                     String rest = "{}";
-                    if(!curatorService.isExists(configmapPath)){
+                    if (!curatorService.isExists(configmapPath)) {
                         curatorService.create(configmapPath, rest);
-                    }else{
+                    } else {
                         curatorService.update(configmapPath, rest);
                     }
                 } else if (Constants.SHARDING_INTERGER.equals(datatype)) {
@@ -176,9 +174,9 @@ public class ShConfigController {
                     }
                     String configmapPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.SHARDINGS + Constants.CONFIGMAP;
                     String rest = "{}";
-                    if(!curatorService.isExists(configmapPath)){
+                    if (!curatorService.isExists(configmapPath)) {
                         curatorService.create(configmapPath, rest);
-                    }else{
+                    } else {
                         curatorService.update(configmapPath, rest);
                     }
 
@@ -190,53 +188,4 @@ public class ShConfigController {
         shConfigService.updateStatusById(shConfigDto.getId(), NumberUtils.toByte(type));
         return result.fill(JsonResponseMsg.CODE_SUCCESS, "状态修改成功");
     }
-
-
-    /**
-     * 获取zk数据
-     */
-//    @RequestMapping(value = "geZkInfo", method = RequestMethod.POST)
-//    @ResponseBody
-//    public JsonResponseMsg geZkInfo(@RequestBody ShConfigDto shConfigDto) {
-//        JsonResponseMsg result = new JsonResponseMsg();
-//        if((byte)1 != shConfigDto.getStatus() && (byte)2 != shConfigDto.getStatus()){
-//            return result.fill(JsonResponseMsg.CODE_FAIL, "对不起你还未同步zk数据暂时无法查询");
-//        }
-//        Boolean isValid = curatorService.init(shConfigDto.getRegServerList());
-//        if (!isValid) {
-//            return result.fill(JsonResponseMsg.CODE_FAIL, "zk链接超时");
-//        }
-//        String dataSourceName = shConfigDto.getDataSourceName();
-//        ShMetadataDto shMetadataDto = shMetadataService.queryByName(dataSourceName);
-//        Byte datatype = shMetadataDto.getType();
-//        Map<String,Object> map = new HashMap<>();
-//        try {
-//            String dataSourcePth = "/" + shConfigDto.getRegNamespace() + "/"
-//                    + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.DATASOURCE;
-//            String dataSource = curatorService.getData(dataSourcePth);
-//            map.put("dataSource",dataSource);
-//            if(Constants.MASTER_SLAVE_INTERGER.equals(datatype)){
-//                String masterslaveRulePath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.MASTERSLAVE + Constants.RUL;
-//                String masterslaveRule= curatorService.getData(masterslaveRulePath);
-//                String configmapPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.MASTERSLAVE + Constants.CONFIGMAP;
-//                String configmap= curatorService.getData(configmapPath);
-//                map.put("masterslaveRule",masterslaveRule);
-//                map.put("configmap",configmap);
-//            }else if (Constants.SHARDING_INTERGER.equals(datatype)) {
-//                String shardingRulePath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.SHARDINGS + Constants.RUL;
-//                String shardingPropsPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.SHARDINGS + Constants.PROPS;
-//                String configmapPath = "/" + shConfigDto.getRegNamespace() + "/" + shConfigDto.getDataSourceName() + Constants.CONFIG + Constants.SHARDINGS + Constants.CONFIGMAP;
-//                String shardingRule= curatorService.getData(shardingRulePath);
-//                String shardingProps= curatorService.getData(shardingPropsPath);
-//                String configmap= curatorService.getData(configmapPath);
-//                map.put("configmap",configmap);
-//                map.put("shardingProps",shardingProps);
-//                map.put("shardingRule",shardingRule);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return result.fill(JsonResponseMsg.CODE_SUCCESS, "查询成功",map);
-//    }
-
 }

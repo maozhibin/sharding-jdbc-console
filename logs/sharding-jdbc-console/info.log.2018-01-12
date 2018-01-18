@@ -1,0 +1,7 @@
+2018-01-12 14:34:03 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 12396 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-12 14:34:03 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-12 14:34:08 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 5.845 seconds (JVM running for 7.693)
+ 2018-01-12 15:27:25 c.c.s.c.Bootstrap 48 [INFO] Starting Bootstrap on PC-XYW-00-0213 with PID 15936 (E:\web\sharding-jdbc-console\target\classes started by geely in E:\web\sharding-jdbc-console)
+ 2018-01-12 15:27:25 c.c.s.c.Bootstrap 593 [INFO] No active profile set, falling back to default profiles: default
+ 2018-01-12 15:27:31 c.c.s.c.Bootstrap 57 [INFO] Started Bootstrap in 7.252 seconds (JVM running for 8.858)
+ 

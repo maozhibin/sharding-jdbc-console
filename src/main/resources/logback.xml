@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
 
-    <property name="log.home" value="logs/sharding-jdbc-console"/>
+    <property name="log.home" value="/logs/sharding-jdbc-console"/>
     <property name="pattern" value="%d{mm:ss} %-5level %logger{36} >>> %msg%n"/>
 
     <!-- 控制台输出 -->
